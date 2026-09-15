@@ -1,35 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   codexion.c                                         :+:      :+:    :+:   */
+/*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/09/14 14:33:55 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/15 17:03:50 by cyakisan         ###   ########.fr       */
+/*   Created: 2026/09/15 14:13:48 by cyakisan          #+#    #+#             */
+/*   Updated: 2026/09/15 16:53:54 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#ifndef PARSING_H
+# define PARSING_H
 
-int	main(int ac, char **av)
-{
-	int	i;
+# include "general_utils.h"
 
-	if (ac == 9)
-	{
-		i = 1;
-		while (i != ac - 1)
-		{
-			ft_check_number_validity(av[i], i);
-			ft_atoi(av[i], i);
-			printf("Argument (%d): %s\n", i, av[i]);
-			i++;
-		}
-		ft_check_scheduler(av[i]);
-		printf("Argument (%d): %s\n", i, av[i]);
-	}
-	else
-		display_error("Not the correct amount of arguments (needs 8)", 1, 0);
-	return (0);
-}
+void	ft_check_number_validity(char *str, int arg_index);
+void	ft_check_scheduler(char *str);
+int		ft_atoi(const char *nptr, int arg_index);
+
+#endif

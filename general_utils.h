@@ -1,35 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   codexion.c                                         :+:      :+:    :+:   */
+/*   general_utils.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/09/14 14:33:55 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/15 17:03:50 by cyakisan         ###   ########.fr       */
+/*   Created: 2026/09/15 12:45:27 by cyakisan          #+#    #+#             */
+/*   Updated: 2026/09/15 16:56:42 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#ifndef GENERAL_UTILS_H
+# define GENERAL_UTILS_H
 
-int	main(int ac, char **av)
-{
-	int	i;
+# define INT_MAX 2147483647
 
-	if (ac == 9)
-	{
-		i = 1;
-		while (i != ac - 1)
-		{
-			ft_check_number_validity(av[i], i);
-			ft_atoi(av[i], i);
-			printf("Argument (%d): %s\n", i, av[i]);
-			i++;
-		}
-		ft_check_scheduler(av[i]);
-		printf("Argument (%d): %s\n", i, av[i]);
-	}
-	else
-		display_error("Not the correct amount of arguments (needs 8)", 1, 0);
-	return (0);
-}
+# include <stdlib.h>
+# include <stdio.h>
+# include <string.h>
+
+size_t	ft_strlen(const char *str);
+void	display_error(char *error_msg, int error_id, int arg_index);
+
+#endif
