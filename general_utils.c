@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/15 12:44:53 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/15 16:56:26 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/17 16:03:56 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	display_error(char *error_msg, int error_id, int arg_index)
 	else
 		fprintf(stderr, "ERROR (%d): %s (argument %d)\n", error_id, error_msg,
 			arg_index);
-	exit(error_id);
 }
 
 size_t	ft_strlen(const char *str)
@@ -28,7 +27,7 @@ size_t	ft_strlen(const char *str)
 
 	i = 0;
 	if (!str)
-		display_error("NULL string encountered", 2, 0);
+		return (display_error(ERR_EMPTY_STR, 2, 0), FALSE);
 	while (str[i] != '\0')
 		++i;
 	return (i);

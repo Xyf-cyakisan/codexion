@@ -6,30 +6,26 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/14 14:33:55 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/15 17:03:50 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/17 17:53:46 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "codexion.h"
 #include "parsing.h"
 
 int	main(int ac, char **av)
 {
-	int	i;
+	t_config	config;
 
-	if (ac == 9)
-	{
-		i = 1;
-		while (i != ac - 1)
-		{
-			ft_check_number_validity(av[i], i);
-			ft_atoi(av[i], i);
-			printf("Argument (%d): %s\n", i, av[i]);
-			i++;
-		}
-		ft_check_scheduler(av[i]);
-		printf("Argument (%d): %s\n", i, av[i]);
-	}
-	else
-		display_error("Not the correct amount of arguments (needs 8)", 1, 0);
+	if (parse(ac, av, &config) == -1)
+		return (1);
+	printf("Number of coders: %d\n", config.nb_coders);
+	printf("Time to burnout: %d\n", config.time_burnout);
+	printf("Time to compile: %d\n", config.time_compile);
+	printf("Time to debug: %d\n", config.time_debug);
+	printf("Time to refactor: %d\n", config.time_refactor);
+	printf("Nb compiles required: %d\n", config.nb_compiles_required);
+	printf("Dongle cooldown: %d\n", config.dongle_cd);
+	printf("Scheduler: '%s'\n", config.scheduler);
 	return (0);
 }
