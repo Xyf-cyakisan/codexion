@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 16:10:34 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/17 17:14:13 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/17 17:55:32 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ t_bool	additional_checks(t_config *config)
 		return (display_error(ERR_TIME_BURNOUT, 7, 2), FALSE);
 	if (config->nb_compiles_required == 0)
 		return (display_error(ERR_REQUIRED_COMP, 8, 6), FALSE);
-	if (config->time_burnout <= config->time_compile
-		+ config->time_debug + config->time_refactor)
-		return (display_error(ERR_BUR_S, 9, 2), FALSE);
+	if (config->time_burnout <= config->time_compile 
+		+ config->time_debug + config->time_refactor) A REVOIR
+		return (display_error(ERR_BUR_S, 9, 2), FALSE); 
 	return (TRUE);
 }
 
