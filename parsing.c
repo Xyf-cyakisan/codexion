@@ -6,11 +6,12 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 16:10:34 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/17 17:55:32 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/21 15:04:35 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+#include "codexion.h"
 
 static void	set_value(int result, t_config *config, int index)
 {
@@ -38,9 +39,9 @@ t_bool	additional_checks(t_config *config)
 		return (display_error(ERR_TIME_BURNOUT, 7, 2), FALSE);
 	if (config->nb_compiles_required == 0)
 		return (display_error(ERR_REQUIRED_COMP, 8, 6), FALSE);
-	if (config->time_burnout <= config->time_compile 
-		+ config->time_debug + config->time_refactor) A REVOIR
-		return (display_error(ERR_BUR_S, 9, 2), FALSE); 
+	// if (config->time_burnout <= config->time_compile 
+	// 	+ config->time_debug + config->time_refactor) A REVOIR
+	// 	return (display_error(ERR_BUR_S, 9, 2), FALSE); 
 	return (TRUE);
 }
 
@@ -71,4 +72,52 @@ t_bool	parse(int ac, char **av, t_config *config)
 	}
 	else
 		return (display_error(ERR_NB_ARGS, 1, 0), FALSE);
+}
+
+static void	set_values(t_memory_manager *memory_manager,
+							t_config config, int nb_dongle)
+{
+	int	i;
+
+	i = 0;
+	while (i < nb_dongle)
+	{
+		(memory_manager->dongles)[i].id = i + 1;
+		(memory_manager->dongles)[i].last_usage = 0;
+		++i;
+	}
+	i = 0;
+	while (i < config.nb_coders)
+	{
+		(memory_manager->coders)[i].id = i + 1;
+		(memory_manager->coders)[i].status = IDLING;
+		(memory_manager->coders)[i].last_compile = 0;
+		(memory_manager->coders)[i].required_compilations = config.nb_compiles_required;
+		(memory_manager->coders)[i].time_compile = config.time_compile;
+		(memory_manager->coders)[i].time_burnout = config.time_burnout;
+		(memory_manager->coders)[i].time_debug = config.time_debug;
+		(memory_manager->coders)[i].time_refactor = config.time_refactor;
+		(memory_manager->coders)[i].dongle_1 = (memory_manager->dongles)[i];
+		(memory_manager->coders)[i].dongle_2 = (memory_manager->dongles)[(i + 1) % config.nb_coders];
+		++i;
+	}
+}
+
+t_bool	create_objects(t_memory_manager *memory_manager, t_config config)
+{
+	int	nb_dongle;
+
+	memory_manager->coders = NULL;
+	memory_manager->dongles = NULL;
+	memory_manager->coders = ft_calloc(config.nb_coders, sizeof(t_coder));
+	if (!memory_manager->coders)
+		return (FALSE);
+	nb_dongle = config.nb_coders;
+	if (nb_dongle == 1)
+		nb_dongle = 2;
+	memory_manager->dongles = ft_calloc(nb_dongle, sizeof(t_dongle));
+	if (!memory_manager->dongles)
+		return (clean(memory_manager), FALSE);
+	set_values(memory_manager, config, nb_dongle);
+	return (TRUE);
 }

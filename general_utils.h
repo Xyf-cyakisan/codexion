@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/15 12:45:27 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/17 17:27:13 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/21 14:15:58 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,7 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <string.h>
-
-typedef int	t_bool;
+# include "structures.h"
 
 size_t	ft_strlen(const char *str);
 void	display_error(char *error_msg, int error_id, int arg_index);
