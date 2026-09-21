@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 16:10:34 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/21 15:04:35 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/21 15:35:16 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,20 +86,21 @@ static void	set_values(t_memory_manager *memory_manager,
 		(memory_manager->dongles)[i].last_usage = 0;
 		++i;
 	}
-	i = 0;
-	while (i < config.nb_coders)
+	i = -1;
+	while (++i < config.nb_coders)
 	{
 		(memory_manager->coders)[i].id = i + 1;
 		(memory_manager->coders)[i].status = IDLING;
 		(memory_manager->coders)[i].last_compile = 0;
-		(memory_manager->coders)[i].required_compilations = config.nb_compiles_required;
+		(memory_manager->coders)[i].required_compilations = (config
+				.nb_compiles_required);
 		(memory_manager->coders)[i].time_compile = config.time_compile;
 		(memory_manager->coders)[i].time_burnout = config.time_burnout;
 		(memory_manager->coders)[i].time_debug = config.time_debug;
 		(memory_manager->coders)[i].time_refactor = config.time_refactor;
 		(memory_manager->coders)[i].dongle_1 = (memory_manager->dongles)[i];
-		(memory_manager->coders)[i].dongle_2 = (memory_manager->dongles)[(i + 1) % config.nb_coders];
-		++i;
+		(memory_manager->coders)[i].dongle_2 = (memory_manager->dongles)[
+			(i + 1) % config.nb_coders];
 	}
 }
 
@@ -113,8 +114,6 @@ t_bool	create_objects(t_memory_manager *memory_manager, t_config config)
 	if (!memory_manager->coders)
 		return (FALSE);
 	nb_dongle = config.nb_coders;
-	if (nb_dongle == 1)
-		nb_dongle = 2;
 	memory_manager->dongles = ft_calloc(nb_dongle, sizeof(t_dongle));
 	if (!memory_manager->dongles)
 		return (clean(memory_manager), FALSE);
