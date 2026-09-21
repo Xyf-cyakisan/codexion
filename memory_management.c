@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/21 14:13:16 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/21 15:02:51 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/21 15:47:52 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ void	*ft_calloc(size_t nmemb, size_t size)
 
 	total_size = nmemb * size;
 	if (size && nmemb && nmemb > (size_t)-1 / size)
-		return (display_error("Memory allocation failed", 10, 0), NULL);
+		return (display_error("Memory allocation failed", 9, 0), NULL);
 	tofill = malloc(total_size);
 	if (tofill == NULL)
-		return (display_error("Memory allocation failed", 10, 0), NULL);
+		return (display_error("Memory allocation failed", 9, 0), NULL);
 	ft_bzero(tofill, total_size);
 	return (tofill);
 }
