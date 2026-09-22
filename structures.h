@@ -6,13 +6,14 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/21 14:07:05 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/21 14:32:02 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/22 15:20:37 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTURES_H
 # define STRUCTURES_H
 
+# include <pthread.h>
 # include <stdint.h>
 
 typedef int	t_bool;
@@ -47,8 +48,9 @@ typedef struct s_coder
 	int			time_burnout;
 	int			time_debug;
 	int			time_refactor;
-	t_dongle	dongle_1;
-	t_dongle	dongle_2;
+	t_dongle	*dongle_1;
+	t_dongle	*dongle_2;
+	pthread_t	thread;
 }	t_coder;
 
 typedef struct s_memory_manager
@@ -58,5 +60,11 @@ typedef struct s_memory_manager
 	int			nb_coders;
 }	t_memory_manager;
 
+
+typedef struct s_heap
+{
+	t_coder			*coder;
+	struct s_heap	*next;
+}	t_heap;
 
 #endif

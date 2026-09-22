@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 16:10:34 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/21 15:35:16 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/22 15:32:41 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,11 @@ static void	set_values(t_memory_manager *memory_manager,
 {
 	int	i;
 
-	i = 0;
-	while (i < nb_dongle)
+	i = -1;
+	while (++i < nb_dongle)
 	{
 		(memory_manager->dongles)[i].id = i + 1;
 		(memory_manager->dongles)[i].last_usage = 0;
-		++i;
 	}
 	i = -1;
 	while (++i < config.nb_coders)
@@ -98,9 +97,9 @@ static void	set_values(t_memory_manager *memory_manager,
 		(memory_manager->coders)[i].time_burnout = config.time_burnout;
 		(memory_manager->coders)[i].time_debug = config.time_debug;
 		(memory_manager->coders)[i].time_refactor = config.time_refactor;
-		(memory_manager->coders)[i].dongle_1 = (memory_manager->dongles)[i];
-		(memory_manager->coders)[i].dongle_2 = (memory_manager->dongles)[
-			(i + 1) % config.nb_coders];
+		(memory_manager->coders)[i].dongle_1 = &((memory_manager->dongles)[i]);
+		(memory_manager->coders)[i].dongle_2 = &((memory_manager->dongles)[
+				(i + 1) % config.nb_coders]);
 	}
 }
 
