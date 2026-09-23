@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/22 14:41:17 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/22 16:02:38 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/23 16:45:35 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,54 @@
 
 void	*tg(void *arg)
 {
-	static int	i;
+	static int		i;
 
 	printf("prout (%d)\n", i + 1);
 	++i;
 	return (arg);
 }
 
-void	start_coders(t_memory_manager *mem_man, t_config config)
+static t_bool	init_mutexes(t_memory_manager *mem_man)
 {
 	int	i;
 
 	i = 0;
-	while (i < config.nb_coders)
+	while (i < mem_man->nb_coders)
 	{
-		pthread_create(&mem_man->coders[i].thread, NULL, tg, NULL);
+		if (pthread_mutex_init(&mem_man->dongles[i].mutex, NULL) != 0)
+		{
+			while (i-- > 0)
+				pthread_mutex_destroy(&mem_man->dongles[i].mutex);
+			return (display_error(ERR_MUTEX_INIT, 11, 0), FALSE);
+		}
 		++i;
 	}
+	return (TRUE);
+}
+
+static t_bool	init_threads(t_memory_manager *mem_man)
+{
+	int	i;
+
 	i = 0;
-	while (i < config.nb_coders)
+	while (i < mem_man->nb_coders)
 	{
-		pthread_join(mem_man->coders[i].thread, NULL);
+		if (pthread_create(&mem_man->coders[i].thread, NULL, tg,
+				NULL) != 0)
+		{
+			while (i-- > 0)
+				pthread_join(mem_man->coders[i].thread, NULL);
+			return (display_error(ERR_THREADS_INIT, 12, 0), FALSE);
+		}
 		++i;
 	}
+	return (TRUE);
+}
+
+t_bool	run_simulation(t_memory_manager *memory_manager)
+{
+	if (init_mutexes(memory_manager) == FALSE
+		|| init_threads(memory_manager) == FALSE)
+		return (clean_base_objects(memory_manager), FALSE);
+	return (TRUE);
 }

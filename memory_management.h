@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/21 14:16:49 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/21 14:49:44 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/23 16:31:34 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 # include "general_utils.h"
 
 void	*ft_calloc(size_t nmemb, size_t size);
-void	clean(t_memory_manager *memory_manager);
+void	clean_base_objects(t_memory_manager *memory_manager);
+void	clean_heap(t_memory_manager *mem_man);
+void	clean_mutexes(t_memory_manager *mem_man);
+void	clean_threads(t_memory_manager *mem_man);
 
 #endif

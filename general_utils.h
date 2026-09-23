@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/09/15 12:45:27 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/21 14:15:58 by cyakisan         ###   ########.fr       */
+/*   Created: 2026/09/15 11:45:27 by cyakisan          #+#    #+#             */
+/*   Updated: 2026/09/23 16:45:21 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@
 # define ERR_TIME_BURNOUT "Time to burnout must be greater than 0"
 # define ERR_REQUIRED_COMP "Number of compiles required must be greater than 0"
 # define ERR_BUR_S "Time to burnout needs to be greater than the operating time"
+# define ERR_EMPTY_NODE_HEAP "NULL node encountered"
+# define ERR_MUTEX_INIT "Mutexes initialization failed"
+# define ERR_THREADS_INIT "Threads initialization failed"
 # define TRUE 1
 # define FALSE -1
 

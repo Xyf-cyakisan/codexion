@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 16:10:34 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/22 15:32:41 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/23 16:44:14 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ t_bool	additional_checks(t_config *config)
 		return (display_error(ERR_TIME_BURNOUT, 7, 2), FALSE);
 	if (config->nb_compiles_required == 0)
 		return (display_error(ERR_REQUIRED_COMP, 8, 6), FALSE);
-	// if (config->time_burnout <= config->time_compile 
-	// 	+ config->time_debug + config->time_refactor) A REVOIR
-	// 	return (display_error(ERR_BUR_S, 9, 2), FALSE); 
+	if (config->time_burnout <= config->time_compile
+		+ config->time_debug + config->time_refactor)
+		return (display_error(ERR_BUR_S, 9, 2), FALSE);
 	return (TRUE);
 }
 
@@ -84,6 +84,7 @@ static void	set_values(t_memory_manager *memory_manager,
 	{
 		(memory_manager->dongles)[i].id = i + 1;
 		(memory_manager->dongles)[i].last_usage = 0;
+		(memory_manager->dongles)[i].is_available = TRUE;
 	}
 	i = -1;
 	while (++i < config.nb_coders)
@@ -109,13 +110,15 @@ t_bool	create_objects(t_memory_manager *memory_manager, t_config config)
 
 	memory_manager->coders = NULL;
 	memory_manager->dongles = NULL;
+	memory_manager->heap = NULL;
+	memory_manager->nb_coders = config.nb_coders;
 	memory_manager->coders = ft_calloc(config.nb_coders, sizeof(t_coder));
 	if (!memory_manager->coders)
 		return (FALSE);
 	nb_dongle = config.nb_coders;
 	memory_manager->dongles = ft_calloc(nb_dongle, sizeof(t_dongle));
 	if (!memory_manager->dongles)
-		return (clean(memory_manager), FALSE);
+		return (clean_base_objects(memory_manager), FALSE);
 	set_values(memory_manager, config, nb_dongle);
 	return (TRUE);
 }

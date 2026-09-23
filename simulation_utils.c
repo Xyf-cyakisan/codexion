@@ -1,26 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.h                                          :+:      :+:    :+:   */
+/*   simulation_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/09/15 14:12:48 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/23 16:45:35 by cyakisan         ###   ########.fr       */
+/*   Created: 2026/09/23 15:28:49 by cyakisan          #+#    #+#             */
+/*   Updated: 2026/09/23 15:50:57 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSING_H
-# define PARSING_H
+#include "codexion.h"
 
-# include "general_utils.h"
-# include "structures.h"
-# include "memory_management.h"
+void	dongle_lock(t_dongle *dongle)
+{
+	pthread_mutex_lock(&dongle->mutex);
+	dongle->is_available = FALSE;
+}
 
-t_bool	ft_check_number_validity(char *str, int arg_index);
-t_bool	ft_check_scheduler(char *str);
-int		ft_atoi(const char *nptr, int arg_index);
-t_bool	parse(int ac, char **av, t_config *config);
-t_bool	create_objects(t_memory_manager *memory_manager, t_config config);
+void	dongle_unlock(t_dongle *dongle)
+{
+	pthread_mutex_unlock(&dongle->mutex);
+	dongle->is_available = TRUE;
+}
 
-#endif
+t_bool	is_dongle_available(t_dongle dongle)
+{
+	return (dongle.is_available);
+}

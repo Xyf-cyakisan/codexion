@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/21 14:07:05 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/22 15:20:37 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/23 15:31:20 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,10 @@ typedef int	t_status;
 
 typedef struct s_dongle
 {
-	uint64_t	last_usage;
-	int			id;
+	uint64_t		last_usage;
+	int				id;
+	pthread_mutex_t	mutex;
+	t_bool			is_available;
 }	t_dongle;
 
 typedef struct s_coder
@@ -53,18 +55,18 @@ typedef struct s_coder
 	pthread_t	thread;
 }	t_coder;
 
-typedef struct s_memory_manager
-{
-	t_coder		*coders;
-	t_dongle	*dongles;
-	int			nb_coders;
-}	t_memory_manager;
-
-
 typedef struct s_heap
 {
 	t_coder			*coder;
 	struct s_heap	*next;
 }	t_heap;
+
+typedef struct s_memory_manager
+{
+	t_coder		*coders;
+	t_dongle	*dongles;
+	t_heap		*heap;
+	int			nb_coders;
+}	t_memory_manager;
 
 #endif
