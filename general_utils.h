@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/15 11:45:27 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/23 16:45:21 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/25 22:03:42 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 # include <stdio.h>
 # include <string.h>
 # include "structures.h"
+# include <sys/time.h>
 
 size_t	ft_strlen(const char *str);
 void	display_error(char *error_msg, int error_id, int arg_index);

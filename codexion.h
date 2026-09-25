@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 16:14:03 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/23 16:25:15 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/25 22:03:37 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@
 # define DEBUGING 2
 # define REFACTORING 3
 
-t_heap	*new_node(t_coder *coder);
-void	heap_add_back(t_heap *new_node, t_heap *node);
-t_coder	*get_heap_first(t_heap **first_node);
-t_bool	run_simulation(t_memory_manager *memory_manager);
+t_request	new_request(t_coder *coder);
+void		heap_add_back(t_heap *heap, t_request request);
+t_coder		*get_heap_first(t_heap *heap);
+t_bool		run_simulation(t_simulation *simulation);
 
 #endif

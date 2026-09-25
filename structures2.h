@@ -1,31 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   codexion.c                                         :+:      :+:    :+:   */
+/*   structures2.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/09/14 14:33:55 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/25 18:26:33 by cyakisan         ###   ########.fr       */
+/*   Created: 2026/09/25 21:41:49 by cyakisan          #+#    #+#             */
+/*   Updated: 2026/09/25 21:44:51 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
-#include "codexion.h"
+#ifndef STRUCTURES2_H
+# define STRUCTURES2_H
 
-int	main(int ac, char **av)
+# include <stddef.h>
+# include <stdint.h>
+
+typedef struct s_coder	t_coder;
+
+typedef struct s_request
 {
-	t_config			config;
-	t_simulation		simulation;
+	t_coder			*coder;
+	uint64_t		last_compile;
+}	t_request;
 
-	if (parse(ac, av, &config) == FALSE)
-		return (1);
-	if (create_objects(&simulation, config) == FALSE)
-		return (1);
-	if (run_simulation(&simulation) == FALSE)
-		return (1);
-	clean_threads(&simulation);
-	clean_mutexes(&simulation);
-	clean_base_objects(&simulation);
-	return (0);
-}
+typedef struct s_heap
+{
+	t_request		requests[2];
+	size_t			size;
+}	t_heap;
+
+#endif

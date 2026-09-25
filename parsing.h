@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/15 14:12:48 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/23 16:45:35 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/25 17:35:38 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ t_bool	ft_check_number_validity(char *str, int arg_index);
 t_bool	ft_check_scheduler(char *str);
 int		ft_atoi(const char *nptr, int arg_index);
 t_bool	parse(int ac, char **av, t_config *config);
-t_bool	create_objects(t_memory_manager *memory_manager, t_config config);
+void	set_dongle_one_and_two(t_simulation *simulation,
+			t_config config, int i);
+t_bool	create_objects(t_simulation *simulation, t_config config);
 
 #endif

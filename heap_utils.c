@@ -6,40 +6,46 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/22 14:52:12 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/23 16:45:35 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/25 21:55:02 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "memory_management.h"
 #include "general_utils.h"
 
-t_heap	*new_node(t_coder *coder)
+t_request	new_request(t_coder *coder)
 {
-	t_heap	*new_node;
+	t_request	request;
 
-	new_node = ft_calloc(1, sizeof(t_heap));
-	if (!new_node)
-		return (display_error(ERR_EMPTY_NODE_HEAP, 10, 0), NULL);
-	new_node->coder = coder;
-	new_node->next = NULL;
-	return (new_node);
+	request.coder = coder;
+	request.last_compile = coder->last_compile;
+	return (request);
 }
 
-void	heap_add_back(t_heap *new_node, t_heap *node)
+void	heap_add_back(t_heap *heap, t_request request)
 {
-	while (node->next != NULL)
-		node = node->next;
-	node->next = new_node;
+	t_request	temp_request;
+
+	heap->requests[heap->size] = request;
+	++heap->size;
+	if (!strcmp(request.coder->scheduler, "edf") && heap->size == 2)
+	{
+		if (heap->requests[0].last_compile > heap->requests[1].last_compile)
+		{
+			temp_request = heap->requests[0];
+			heap->requests[0] = heap->requests[1];
+			heap->requests[1] = temp_request;
+		}
+	}
 }
 
-t_coder	*get_heap_first(t_heap **first_node)
+t_coder	*get_heap_first(t_heap *heap)
 {
-	t_coder	*coder;
-	t_heap	*leaving_node;
+	t_coder	*temp_coder;
 
-	leaving_node = *first_node;
-	coder = (*first_node)->coder;
-	*first_node = (*first_node)->next;
-	free(leaving_node);
-	return (coder);
+	--heap->size;
+	temp_coder = heap->requests[0].coder;
+	if (heap->requests[1].coder)
+		heap->requests[0].coder = heap->requests[1].coder;
+	return (temp_coder);
 }

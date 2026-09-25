@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 16:10:34 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/23 16:44:14 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/25 22:00:25 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ t_bool	parse(int ac, char **av, t_config *config)
 		return (display_error(ERR_NB_ARGS, 1, 0), FALSE);
 }
 
-static void	set_values(t_memory_manager *memory_manager,
+static void	set_values(t_simulation *simulation,
 							t_config config, int nb_dongle)
 {
 	int	i;
@@ -82,43 +82,41 @@ static void	set_values(t_memory_manager *memory_manager,
 	i = -1;
 	while (++i < nb_dongle)
 	{
-		(memory_manager->dongles)[i].id = i + 1;
-		(memory_manager->dongles)[i].last_usage = 0;
-		(memory_manager->dongles)[i].is_available = TRUE;
+		(simulation->dongles)[i].id = i + 1;
+		(simulation->dongles)[i].last_usage = 0;
 	}
 	i = -1;
 	while (++i < config.nb_coders)
 	{
-		(memory_manager->coders)[i].id = i + 1;
-		(memory_manager->coders)[i].status = IDLING;
-		(memory_manager->coders)[i].last_compile = 0;
-		(memory_manager->coders)[i].required_compilations = (config
+		(simulation->coders)[i].id = i + 1;
+		(simulation->coders)[i].status = IDLING;
+		(simulation->coders)[i].last_compile = get_time_of_day();
+		(simulation->coders)[i].required_compilations = (config
 				.nb_compiles_required);
-		(memory_manager->coders)[i].time_compile = config.time_compile;
-		(memory_manager->coders)[i].time_burnout = config.time_burnout;
-		(memory_manager->coders)[i].time_debug = config.time_debug;
-		(memory_manager->coders)[i].time_refactor = config.time_refactor;
-		(memory_manager->coders)[i].dongle_1 = &((memory_manager->dongles)[i]);
-		(memory_manager->coders)[i].dongle_2 = &((memory_manager->dongles)[
-				(i + 1) % config.nb_coders]);
+		(simulation->coders)[i].time_compile = config.time_compile;
+		(simulation->coders)[i].time_burnout = config.time_burnout;
+		(simulation->coders)[i].time_debug = config.time_debug;
+		(simulation->coders)[i].time_refactor = config.time_refactor;
+		set_dongle_one_and_two(simulation, config, i);
+		(simulation->coders)[i].scheduler = config.scheduler;
 	}
 }
 
-t_bool	create_objects(t_memory_manager *memory_manager, t_config config)
+t_bool	create_objects(t_simulation *simulation, t_config config)
 {
 	int	nb_dongle;
 
-	memory_manager->coders = NULL;
-	memory_manager->dongles = NULL;
-	memory_manager->heap = NULL;
-	memory_manager->nb_coders = config.nb_coders;
-	memory_manager->coders = ft_calloc(config.nb_coders, sizeof(t_coder));
-	if (!memory_manager->coders)
+	simulation->coders = NULL;
+	simulation->dongles = NULL;
+	simulation->nb_coders = config.nb_coders;
+	pthread_cond_init(&simulation->cond, NULL);
+	simulation->coders = ft_calloc(config.nb_coders, sizeof(t_coder));
+	if (!simulation->coders)
 		return (FALSE);
 	nb_dongle = config.nb_coders;
-	memory_manager->dongles = ft_calloc(nb_dongle, sizeof(t_dongle));
-	if (!memory_manager->dongles)
-		return (clean_base_objects(memory_manager), FALSE);
-	set_values(memory_manager, config, nb_dongle);
+	simulation->dongles = ft_calloc(nb_dongle, sizeof(t_dongle));
+	if (!simulation->dongles)
+		return (clean_base_objects(simulation), FALSE);
+	set_values(simulation, config, nb_dongle);
 	return (TRUE);
 }
