@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/14 14:33:55 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/25 18:26:33 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/28 13:26:16 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	main(int ac, char **av)
 		return (1);
 	if (create_objects(&simulation, config) == FALSE)
 		return (1);
-	if (run_simulation(&simulation) == FALSE)
+	if (run_whole_simulation(&simulation) == FALSE)
 		return (1);
 	clean_threads(&simulation);
 	clean_mutexes(&simulation);

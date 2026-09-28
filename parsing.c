@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 16:10:34 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/25 22:00:25 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/28 17:02:32 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,32 +84,35 @@ static void	set_values(t_simulation *simulation,
 	{
 		(simulation->dongles)[i].id = i + 1;
 		(simulation->dongles)[i].last_usage = 0;
+		(simulation->dongles)[i].heap.scheduler = config.scheduler;
+		(simulation->dongles)[i].heap.size = 0;
 	}
 	i = -1;
 	while (++i < config.nb_coders)
 	{
 		(simulation->coders)[i].id = i + 1;
 		(simulation->coders)[i].status = IDLING;
-		(simulation->coders)[i].last_compile = get_time_of_day();
+		(simulation->coders)[i].last_compile = 0;
 		(simulation->coders)[i].required_compilations = (config
 				.nb_compiles_required);
 		(simulation->coders)[i].time_compile = config.time_compile;
 		(simulation->coders)[i].time_burnout = config.time_burnout;
 		(simulation->coders)[i].time_debug = config.time_debug;
 		(simulation->coders)[i].time_refactor = config.time_refactor;
+		(simulation->coders)[i].log_mutex = &simulation->log_mutex;
 		set_dongle_one_and_two(simulation, config, i);
-		(simulation->coders)[i].scheduler = config.scheduler;
 	}
 }
 
 t_bool	create_objects(t_simulation *simulation, t_config config)
 {
-	int	nb_dongle;
+	int				nb_dongle;
 
 	simulation->coders = NULL;
 	simulation->dongles = NULL;
+	if (pthread_mutex_init(&simulation->log_mutex, NULL) != 0)
+		return (FALSE);
 	simulation->nb_coders = config.nb_coders;
-	pthread_cond_init(&simulation->cond, NULL);
 	simulation->coders = ft_calloc(config.nb_coders, sizeof(t_coder));
 	if (!simulation->coders)
 		return (FALSE);

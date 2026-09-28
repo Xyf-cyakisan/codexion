@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/21 14:12:16 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/25 21:23:43 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/28 15:40:09 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ void	clean_base_objects(t_simulation *simulation)
 {
 	free(simulation->coders);
 	free(simulation->dongles);
-	pthread_cond_destroy(&simulation->cond);
 	simulation->coders = NULL;
 	simulation->dongles = NULL;
 }
@@ -59,6 +58,7 @@ void	clean_mutexes(t_simulation *simu)
 	while (i < simu->nb_coders)
 	{
 		pthread_mutex_destroy(&simu->dongles[i].mutex);
+		pthread_mutex_destroy(&simu->dongles[i].heap.heap_mutex);
 		++i;
 	}
 }

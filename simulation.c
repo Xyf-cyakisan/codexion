@@ -6,27 +6,11 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/22 14:41:17 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/25 21:58:26 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/28 17:32:51 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
-
-void	compile(t_coder *coder)
-{
-	if (coder->dongle_1->heap.requests[0].coder->id != coder->id
-		|| coder->dongle_2->heap.requests[0].coder->id != coder->id)
-		return ;
-	coder = get_heap_first(&coder->dongle_1->heap);
-	pthread_mutex_lock(&coder->dongle_1->mutex);
-	pthread_mutex_lock(&coder->dongle_2->mutex);
-	printf("Compiling started by coder %d\n", coder->id);
-	usleep(coder->time_compile * 1000);
-	coder->required_compilations--;
-	coder->status = DEBUGING;
-	pthread_mutex_unlock(&coder->dongle_1->mutex);
-	pthread_mutex_unlock(&coder->dongle_2->mutex);
-}
 
 static t_bool	init_mutexes(t_simulation *simu)
 {
@@ -35,10 +19,13 @@ static t_bool	init_mutexes(t_simulation *simu)
 	i = 0;
 	while (i < simu->nb_coders)
 	{
-		if (pthread_mutex_init(&simu->dongles[i].mutex, NULL) != 0)
+		if (pthread_mutex_init(&simu->dongles[i].mutex, NULL) != 0 || pthread_mutex_init(&simu->dongles[i].heap.heap_mutex, NULL) != 0)
 		{
 			while (i-- > 0)
+			{
+				pthread_mutex_destroy(&simu->dongles[i].heap.heap_mutex);
 				pthread_mutex_destroy(&simu->dongles[i].mutex);
+			}
 			return (display_error(ERR_MUTEX_INIT, 11, 0), FALSE);
 		}
 		++i;
@@ -46,18 +33,27 @@ static t_bool	init_mutexes(t_simulation *simu)
 	return (TRUE);
 }
 
-void	*caca(void *coder)
+static void	*run_single_simulation(void *arg)
 {
-	t_coder	*codeer;
+	t_coder		*coder;
+	t_request	request;
+	uint64_t	time_start_of_simu;
 
-	codeer = coder;
-	while (codeer->required_compilations != 0)
+	coder = arg;
+	time_start_of_simu = true_get_time_of_day();
+	while (coder->required_compilations != 0)
 	{
-		heap_add_back(&codeer->dongle_1->heap, new_request(codeer));
-		heap_add_back(&codeer->dongle_2->heap, new_request(codeer));
-		codeer->status = COMPILING;
-		while (codeer->status == COMPILING)
-			compile(codeer);
+		pthread_mutex_lock(&coder->dongle_1->heap.heap_mutex);
+		pthread_mutex_lock(&coder->dongle_2->heap.heap_mutex);
+		request = new_request(coder);
+		heap_add_back(&coder->dongle_1->heap, request);
+		heap_add_back(&coder->dongle_2->heap, request);
+		pthread_mutex_unlock(&coder->dongle_1->heap.heap_mutex);
+		pthread_mutex_unlock(&coder->dongle_2->heap.heap_mutex);
+		coder->status = COMPILING;
+		while (coder->status == COMPILING)
+			compile(coder, time_start_of_simu);
+		// coder->status = get_next_step(coder->status);
 	}
 	return (NULL);
 }
@@ -69,7 +65,7 @@ static t_bool	init_threads(t_simulation *simu)
 	i = 0;
 	while (i < simu->nb_coders)
 	{
-		if (pthread_create(&simu->coders[i].thread, NULL, caca,
+		if (pthread_create(&simu->coders[i].thread, NULL, run_single_simulation,
 				&simu->coders[i]) != 0)
 		{
 			while (i-- > 0)
@@ -81,7 +77,7 @@ static t_bool	init_threads(t_simulation *simu)
 	return (TRUE);
 }
 
-t_bool	run_simulation(t_simulation *simulation)
+t_bool	run_whole_simulation(t_simulation *simulation)
 {
 	if (init_mutexes(simulation) == FALSE
 		|| init_threads(simulation) == FALSE)

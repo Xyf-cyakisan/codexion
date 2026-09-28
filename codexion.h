@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 16:14:03 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/25 22:03:37 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/28 15:05:54 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,12 @@
 # include <unistd.h>
 # include "memory_management.h"
 
-# define IDLING 0
-# define COMPILING 1
-# define DEBUGING 2
-# define REFACTORING 3
-
 t_request	new_request(t_coder *coder);
 void		heap_add_back(t_heap *heap, t_request request);
-t_coder		*get_heap_first(t_heap *heap);
-t_bool		run_simulation(t_simulation *simulation);
+void		heap_pop(t_heap *heap);
+t_status	get_next_step(t_status current_step);
+void		print_log(char *log, uint64_t time_start_of_simu, t_coder *coder);
+void		compile(t_coder *coder, uint64_t time_start_of_simu);
+t_bool		run_whole_simulation(t_simulation *simulation);
 
 #endif

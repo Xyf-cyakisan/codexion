@@ -9,6 +9,8 @@ FILES = codexion.c \
 	   parsing_utils.c \
 	   parsing.c \
 	   heap_utils.c \
+	   simulation_utils.c \
+	   simulation_actions.c \
 	   simulation.c 
 
 OBJS = $(FILES:%.c=$(OBJ_DIR)/%.o)

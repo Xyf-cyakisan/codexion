@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/15 11:44:53 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/25 22:05:49 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/28 13:21:35 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,11 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-uint16_t	true_get_time_of_day(uint64_t regular_get_time)
+uint64_t	true_get_time_of_day(void)
 {
 	struct timeval	time;
 
-	return (gettimeofday(&time, NULL));
+	gettimeofday(&time, NULL);
+	return ((uint64_t)time.tv_sec * 1000
+		+ (uint64_t)time.tv_usec / 1000);
 }

@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/21 14:07:05 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/25 21:45:11 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/28 16:58:47 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,32 @@
 
 # include <pthread.h>
 # include <stdint.h>
-# include "structures2.h"
+
+# define INT_MAX 2147483647
+# define ERR_NB_ARGS "Not the correct amount of arguments (needs 8)"
+# define ERR_EMPTY_STR "Empty string encountered"
+# define ERR_POS_INTS "First eight arguments must be positive integers"
+# define ERR_SCHEDULER "Scheduler must be 'fifo' or 'edf'"
+# define ERR_BIGGER_INT_MAX "No number should be bigger than the INT_MAX"
+# define ERR_NB_CODERS "Number of coders must be greater than 0"
+# define ERR_TIME_BURNOUT "Time to burnout must be greater than 0"
+# define ERR_REQUIRED_COMP "Number of compiles required must be greater than 0"
+# define ERR_BUR_S "Time to burnout needs to be greater than the operating time"
+# define ERR_EMPTY_NODE_HEAP "NULL node encountered"
+# define ERR_MUTEX_INIT "Mutexes initialization failed"
+# define ERR_THREADS_INIT "Threads initialization failed"
+# define TRUE 1
+# define FALSE -1
 
 typedef int	t_bool;
+
+typedef enum e_status
+{
+	IDLING = 0,
+	COMPILING = 1,
+	DEBUGING = 2,
+	REFACTORING = 3
+}	t_status;
 
 typedef struct s_config
 {
@@ -31,7 +54,20 @@ typedef struct s_config
 	int			dongle_cd;
 }	t_config;
 
-typedef int	t_status;
+
+typedef struct s_request
+{
+	int				coder_id;
+	uint64_t		last_compile;
+}	t_request;
+
+typedef struct s_heap
+{
+	t_request		requests[2];
+	size_t			size;
+	const char		*scheduler;
+	pthread_mutex_t	heap_mutex;
+}	t_heap;
 
 typedef struct s_dongle
 {
@@ -43,29 +79,26 @@ typedef struct s_dongle
 
 typedef struct s_coder
 {
-	int			id;
-	t_status	status;
-	uint64_t	last_compile;
-	int			required_compilations;
-	int			time_compile;
-	int			time_burnout;
-	int			time_debug;
-	int			time_refactor;
-	t_dongle	*dongle_1;
-	t_dongle	*dongle_2;
-	pthread_t	thread;
-	const char	*scheduler;
+	int				id;
+	t_status		status;
+	uint64_t		last_compile;
+	uint64_t		required_compilations;
+	uint64_t		time_compile;
+	uint64_t		time_burnout;
+	uint64_t		time_debug;
+	uint64_t		time_refactor;
+	t_dongle		*dongle_1;
+	t_dongle		*dongle_2;
+	pthread_t		thread;
+	pthread_mutex_t	*log_mutex;
 }	t_coder;
-
-
-
 
 typedef struct s_simulation
 {
 	t_coder			*coders;
 	t_dongle		*dongles;
 	int				nb_coders;
-	pthread_cond_t	cond;
+	pthread_mutex_t	log_mutex;
 }	t_simulation;
 
 #endif
