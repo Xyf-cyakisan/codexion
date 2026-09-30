@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 16:10:34 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/28 17:02:32 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/30 16:27:33 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,13 +85,13 @@ static void	set_values(t_simulation *simulation,
 		(simulation->dongles)[i].id = i + 1;
 		(simulation->dongles)[i].last_usage = 0;
 		(simulation->dongles)[i].heap.scheduler = config.scheduler;
-		(simulation->dongles)[i].heap.size = 0;
+		(simulation->dongles)[i].dongle_cd = config.dongle_cd;
 	}
 	i = -1;
 	while (++i < config.nb_coders)
 	{
 		(simulation->coders)[i].id = i + 1;
-		(simulation->coders)[i].status = IDLING;
+		(simulation->coders)[i].status = COMPILING;
 		(simulation->coders)[i].last_compile = 0;
 		(simulation->coders)[i].required_compilations = (config
 				.nb_compiles_required);

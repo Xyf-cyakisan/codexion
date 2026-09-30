@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 13:53:53 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/28 15:06:42 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/30 16:32:21 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,12 @@
 
 t_status	get_next_step(t_status current_step)
 {
-	if (current_step == IDLING)
-		return (COMPILING);
-	else if (current_step == COMPILING)
+	if (current_step == COMPILING)
 		return (DEBUGING);
 	else if (current_step == DEBUGING)
 		return (REFACTORING);
 	else
-		return (IDLING);
+		return (COMPILING);
 }
 
 void	print_log(char *log, uint64_t time_start_of_simu, t_coder *coder)
@@ -32,4 +30,38 @@ void	print_log(char *log, uint64_t time_start_of_simu, t_coder *coder)
 	printf("%d ", coder->id);
 	printf("%s", log);
 	pthread_mutex_unlock(coder->log_mutex);
+}
+
+t_bool	check_dongles_cooldowns(t_coder *coder)
+{
+	uint64_t	current_time;
+
+	current_time = true_get_time_of_day();
+	if (coder->dongle_1->last_usage +
+		coder->dongle_1->dongle_cd <= current_time
+		&& coder->dongle_2->last_usage +
+		coder->dongle_2->dongle_cd <= current_time)
+		return (TRUE);
+	else
+		return (FALSE);
+}
+
+void	update_dongle_cooldown(t_coder *coder)
+{
+	coder->dongle_1->last_usage = true_get_time_of_day();
+	coder->dongle_2->last_usage = coder->dongle_1->last_usage;
+}
+
+t_bool	check_if_coder_can_compile(t_coder *coder)
+{
+	if (coder->dongle_1->heap.requests[0].coder_id != coder->id
+	|| coder->dongle_2->heap.requests[0].coder_id != coder->id
+	|| check_dongles_cooldowns(coder) == FALSE)
+	{
+		pthread_mutex_unlock(&coder->dongle_2->mutex);
+		pthread_mutex_unlock(&coder->dongle_1->mutex);
+		return (FALSE);
+	}
+	else
+		return (TRUE);
 }

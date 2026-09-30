@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/21 14:07:05 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/28 16:58:47 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/30 16:27:48 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ typedef int	t_bool;
 
 typedef enum e_status
 {
-	IDLING = 0,
 	COMPILING = 1,
 	DEBUGING = 2,
 	REFACTORING = 3
@@ -75,6 +74,7 @@ typedef struct s_dongle
 	int				id;
 	t_heap			heap;
 	pthread_mutex_t	mutex;
+	int				dongle_cd;
 }	t_dongle;
 
 typedef struct s_coder
@@ -82,7 +82,7 @@ typedef struct s_coder
 	int				id;
 	t_status		status;
 	uint64_t		last_compile;
-	uint64_t		required_compilations;
+	int				required_compilations;
 	uint64_t		time_compile;
 	uint64_t		time_burnout;
 	uint64_t		time_debug;

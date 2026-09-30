@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/22 14:41:17 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/28 17:32:51 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/30 16:39:41 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,25 +36,15 @@ static t_bool	init_mutexes(t_simulation *simu)
 static void	*run_single_simulation(void *arg)
 {
 	t_coder		*coder;
-	t_request	request;
 	uint64_t	time_start_of_simu;
+	int			required_comps_beg;
+	t_request	request;
 
 	coder = arg;
 	time_start_of_simu = true_get_time_of_day();
+	required_comps_beg = coder->required_compilations;
 	while (coder->required_compilations != 0)
-	{
-		pthread_mutex_lock(&coder->dongle_1->heap.heap_mutex);
-		pthread_mutex_lock(&coder->dongle_2->heap.heap_mutex);
-		request = new_request(coder);
-		heap_add_back(&coder->dongle_1->heap, request);
-		heap_add_back(&coder->dongle_2->heap, request);
-		pthread_mutex_unlock(&coder->dongle_1->heap.heap_mutex);
-		pthread_mutex_unlock(&coder->dongle_2->heap.heap_mutex);
-		coder->status = COMPILING;
-		while (coder->status == COMPILING)
-			compile(coder, time_start_of_simu);
-		// coder->status = get_next_step(coder->status);
-	}
+		coder_act(coder, time_start_of_simu, required_comps_beg, request);
 	return (NULL);
 }
 
@@ -77,8 +67,29 @@ static t_bool	init_threads(t_simulation *simu)
 	return (TRUE);
 }
 
+void	set_heaps_beginning(t_simulation *simulation)
+{
+	int    parity;
+	int    i;
+	parity = 0;
+	while (parity < 2)
+	{
+		i = parity;
+		while (i < simulation->nb_coders)
+		{
+			heap_add_back(&simulation->coders[i].dongle_1->heap,
+				new_request(&simulation->coders[i]));
+			heap_add_back(&simulation->coders[i].dongle_2->heap,
+				new_request(&simulation->coders[i]));
+			i += 2;
+		}
+		parity++;
+	}
+}
+
 t_bool	run_whole_simulation(t_simulation *simulation)
 {
+	set_heaps_beginning(simulation);
 	if (init_mutexes(simulation) == FALSE
 		|| init_threads(simulation) == FALSE)
 		return (clean_base_objects(simulation), FALSE);
