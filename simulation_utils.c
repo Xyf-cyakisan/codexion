@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 13:53:53 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/30 16:32:21 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/30 17:06:51 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ t_bool	check_dongles_cooldowns(t_coder *coder)
 	uint64_t	current_time;
 
 	current_time = true_get_time_of_day();
-	if (coder->dongle_1->last_usage +
-		coder->dongle_1->dongle_cd <= current_time
-		&& coder->dongle_2->last_usage +
-		coder->dongle_2->dongle_cd <= current_time)
+	if (coder->dongle_1->last_usage
+		+ coder->dongle_1->dongle_cd <= current_time
+		&& coder->dongle_2->last_usage
+		+ coder->dongle_2->dongle_cd <= current_time)
 		return (TRUE);
 	else
 		return (FALSE);
@@ -55,8 +55,8 @@ void	update_dongle_cooldown(t_coder *coder)
 t_bool	check_if_coder_can_compile(t_coder *coder)
 {
 	if (coder->dongle_1->heap.requests[0].coder_id != coder->id
-	|| coder->dongle_2->heap.requests[0].coder_id != coder->id
-	|| check_dongles_cooldowns(coder) == FALSE)
+		|| coder->dongle_2->heap.requests[0].coder_id != coder->id
+		|| check_dongles_cooldowns(coder) == FALSE)
 	{
 		pthread_mutex_unlock(&coder->dongle_2->mutex);
 		pthread_mutex_unlock(&coder->dongle_1->mutex);

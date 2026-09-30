@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/21 14:07:05 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/30 16:27:48 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/30 17:06:34 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ typedef struct s_config
 	int			nb_compiles_required;
 	int			dongle_cd;
 }	t_config;
-
 
 typedef struct s_request
 {

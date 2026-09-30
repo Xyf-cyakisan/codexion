@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/22 14:41:17 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/30 16:39:41 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/30 17:06:04 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ static t_bool	init_mutexes(t_simulation *simu)
 	i = 0;
 	while (i < simu->nb_coders)
 	{
-		if (pthread_mutex_init(&simu->dongles[i].mutex, NULL) != 0 || pthread_mutex_init(&simu->dongles[i].heap.heap_mutex, NULL) != 0)
+		if (pthread_mutex_init(&simu->dongles[i].mutex, NULL) != 0
+			|| pthread_mutex_init(&simu->dongles[i].heap.heap_mutex, NULL) != 0)
 		{
 			while (i-- > 0)
 			{
@@ -69,8 +70,9 @@ static t_bool	init_threads(t_simulation *simu)
 
 void	set_heaps_beginning(t_simulation *simulation)
 {
-	int    parity;
-	int    i;
+	int	parity;
+	int	i;
+
 	parity = 0;
 	while (parity < 2)
 	{

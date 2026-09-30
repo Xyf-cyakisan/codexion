@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 13:28:15 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/30 16:57:27 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/30 17:10:23 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,25 +54,25 @@ void	coder_act(t_coder *coder, uint64_t time_start_of_simu,
 			int required_comps_beg, t_request request)
 {
 	if (coder->status == COMPILING)
+	{
+		if (required_comps_beg > coder->required_compilations)
 		{
-			if (required_comps_beg > coder->required_compilations)
-			{
-				pthread_mutex_lock(&coder->dongle_1->heap.heap_mutex);
-				pthread_mutex_lock(&coder->dongle_2->heap.heap_mutex);
-				request = new_request(coder);
-				heap_add_back(&coder->dongle_1->heap, request);
-				heap_add_back(&coder->dongle_2->heap, request);
-				pthread_mutex_unlock(&coder->dongle_1->heap.heap_mutex);
-				pthread_mutex_unlock(&coder->dongle_2->heap.heap_mutex);
-			}
-			while (coder->status == COMPILING)
-			{
-				compile(coder, time_start_of_simu);
-				usleep(10);
-			}
+			pthread_mutex_lock(&coder->dongle_1->heap.heap_mutex);
+			pthread_mutex_lock(&coder->dongle_2->heap.heap_mutex);
+			request = new_request(coder);
+			heap_add_back(&coder->dongle_1->heap, request);
+			heap_add_back(&coder->dongle_2->heap, request);
+			pthread_mutex_unlock(&coder->dongle_1->heap.heap_mutex);
+			pthread_mutex_unlock(&coder->dongle_2->heap.heap_mutex);
 		}
-		else if (coder->status == DEBUGING)
-			debug(coder, time_start_of_simu);
-		else
-			refactor(coder, time_start_of_simu);
+		while (coder->status == COMPILING)
+		{
+			compile(coder, time_start_of_simu);
+			usleep(10);
+		}
+	}
+	else if (coder->status == DEBUGING)
+		debug(coder, time_start_of_simu);
+	else
+		refactor(coder, time_start_of_simu);
 }

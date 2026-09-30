@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 16:14:03 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/30 16:39:14 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/09/30 16:59:33 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void		compile(t_coder *coder, uint64_t time_start_of_simu);
 void		debug(t_coder *coder, uint64_t time_start_of_simu);
 void		refactor(t_coder *coder, uint64_t time_start_of_simu);
 void		coder_act(t_coder *coder, uint64_t time_start_of_simu,
-			int required_comps_beg, t_request request);
+				int required_comps_beg, t_request request);
 t_bool		run_whole_simulation(t_simulation *simulation);
 
 #endif
