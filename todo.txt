@@ -1,4 +1,5 @@
-mettre des fonctions statiques
-check si c'est bien securise et free partout
+mettre des fonctions statiques'
+check si tu geres bien tous les cas avec ton parsing
+check si c'est bien securise et free partout et si y'a des messages d'errerurs quand il faut
 check si tout est bien respecte dans le sujet
 check des cas plus extremes
