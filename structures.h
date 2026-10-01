@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/21 14:07:05 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/10/01 16:30:44 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/10/01 16:47:54 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ typedef struct s_monitor
 	t_coder			*coders;
 	pthread_t		checker_thread;
 	t_bool			*stop;
-	pthread_mutex_t *log_mutex;
+	pthread_mutex_t	*log_mutex;
 	int				nb_coders;
 	t_bool			*simu_started;
 }	t_monitor;

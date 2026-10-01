@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/22 14:41:17 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/10/01 16:32:39 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/10/01 16:48:17 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ static t_bool	init_threads(t_simulation *simu)
 
 	i = 0;
 	if (pthread_create(&simu->monitor.checker_thread, NULL,
-		monitor, &simu->monitor) != 0)
+			monitor, &simu->monitor) != 0)
 		return (pthread_join(simu->monitor.checker_thread, NULL),
-				display_error(ERR_THREADS_INIT, 12, 0), FALSE);
+			display_error(ERR_THREADS_INIT, 12, 0), FALSE);
 	while (i < simu->nb_coders)
 	{
 		if (pthread_create(&simu->coders[i].thread, NULL, run_single_simulation,
@@ -71,7 +71,7 @@ static t_bool	init_threads(t_simulation *simu)
 			while (i-- > 0)
 				pthread_join(simu->coders[i].thread, NULL);
 			return (display_error(ERR_THREADS_INIT, 12, 0),
-			simu->simu_started = TRUE, simu->stop = TRUE, FALSE);
+				simu->simu_started = TRUE, simu->stop = TRUE, FALSE);
 		}
 		++i;
 	}

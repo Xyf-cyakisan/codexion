@@ -1,0 +1,4 @@
+mettre des fonctions statiques
+check si c'est bien securise et free partout
+check si tout est bien respecte dans le sujet
+check des cas plus extremes
