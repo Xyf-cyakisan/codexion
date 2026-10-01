@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/22 14:41:17 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/30 17:06:04 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/10/01 16:32:39 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,14 @@ static t_bool	init_mutexes(t_simulation *simu)
 	while (i < simu->nb_coders)
 	{
 		if (pthread_mutex_init(&simu->dongles[i].mutex, NULL) != 0
-			|| pthread_mutex_init(&simu->dongles[i].heap.heap_mutex, NULL) != 0)
+			|| pthread_mutex_init(&simu->dongles[i].heap.heap_mutex, NULL) != 0
+			|| pthread_mutex_init(&simu->coders[i].compile_mutex, NULL))
 		{
 			while (i-- > 0)
 			{
 				pthread_mutex_destroy(&simu->dongles[i].heap.heap_mutex);
 				pthread_mutex_destroy(&simu->dongles[i].mutex);
+				pthread_mutex_destroy(&simu->coders[i].compile_mutex);
 			}
 			return (display_error(ERR_MUTEX_INIT, 11, 0), FALSE);
 		}
@@ -42,9 +44,12 @@ static void	*run_single_simulation(void *arg)
 	t_request	request;
 
 	coder = arg;
+	while (*coder->simu_started == FALSE)
+		usleep(1000);
 	time_start_of_simu = true_get_time_of_day();
+	coder->time_start_of_simu = time_start_of_simu;
 	required_comps_beg = coder->required_compilations;
-	while (coder->required_compilations != 0)
+	while (coder->required_compilations != 0 && *coder->stop == FALSE)
 		coder_act(coder, time_start_of_simu, required_comps_beg, request);
 	return (NULL);
 }
@@ -54,6 +59,10 @@ static t_bool	init_threads(t_simulation *simu)
 	int	i;
 
 	i = 0;
+	if (pthread_create(&simu->monitor.checker_thread, NULL,
+		monitor, &simu->monitor) != 0)
+		return (pthread_join(simu->monitor.checker_thread, NULL),
+				display_error(ERR_THREADS_INIT, 12, 0), FALSE);
 	while (i < simu->nb_coders)
 	{
 		if (pthread_create(&simu->coders[i].thread, NULL, run_single_simulation,
@@ -61,10 +70,12 @@ static t_bool	init_threads(t_simulation *simu)
 		{
 			while (i-- > 0)
 				pthread_join(simu->coders[i].thread, NULL);
-			return (display_error(ERR_THREADS_INIT, 12, 0), FALSE);
+			return (display_error(ERR_THREADS_INIT, 12, 0),
+			simu->simu_started = TRUE, simu->stop = TRUE, FALSE);
 		}
 		++i;
 	}
+	simu->simu_started = TRUE;
 	return (TRUE);
 }
 

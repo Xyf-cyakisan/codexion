@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 13:53:53 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/30 17:06:51 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/10/01 16:42:29 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ t_bool	check_if_coder_can_compile(t_coder *coder)
 {
 	if (coder->dongle_1->heap.requests[0].coder_id != coder->id
 		|| coder->dongle_2->heap.requests[0].coder_id != coder->id
-		|| check_dongles_cooldowns(coder) == FALSE)
+		|| check_dongles_cooldowns(coder) == FALSE
+		|| *coder->stop == TRUE)
 	{
 		pthread_mutex_unlock(&coder->dongle_2->mutex);
 		pthread_mutex_unlock(&coder->dongle_1->mutex);

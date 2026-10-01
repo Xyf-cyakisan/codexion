@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 13:28:15 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/30 17:10:23 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/10/01 16:42:35 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,9 @@ void	compile(t_coder *coder, uint64_t time_start_of_simu)
 	pthread_mutex_unlock(&coder->dongle_1->heap.heap_mutex);
 	print_log("has taken a dongle\n", time_start_of_simu, coder);
 	print_log("has taken a dongle\n", time_start_of_simu, coder);
+	pthread_mutex_lock(&coder->compile_mutex);
 	coder->last_compile = true_get_time_of_day();
+	pthread_mutex_unlock(&coder->compile_mutex);
 	print_log("is compiling\n", time_start_of_simu, coder);
 	usleep(coder->time_compile * 1000);
 	coder->required_compilations--;
@@ -65,7 +67,7 @@ void	coder_act(t_coder *coder, uint64_t time_start_of_simu,
 			pthread_mutex_unlock(&coder->dongle_1->heap.heap_mutex);
 			pthread_mutex_unlock(&coder->dongle_2->heap.heap_mutex);
 		}
-		while (coder->status == COMPILING)
+		while (coder->status == COMPILING && *coder->stop == FALSE)
 		{
 			compile(coder, time_start_of_simu);
 			usleep(10);

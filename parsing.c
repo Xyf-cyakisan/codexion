@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 16:10:34 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/30 16:27:33 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/10/01 15:40:13 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,5 +121,6 @@ t_bool	create_objects(t_simulation *simulation, t_config config)
 	if (!simulation->dongles)
 		return (clean_base_objects(simulation), FALSE);
 	set_values(simulation, config, nb_dongle);
+	set_monitor_values(simulation, &simulation->monitor);
 	return (TRUE);
 }

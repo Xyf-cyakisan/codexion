@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/23 15:54:54 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/09/25 16:05:02 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/10/01 16:07:48 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,4 +22,6 @@ void	clean_threads(t_simulation *simu)
 		pthread_join(simu->coders[i].thread, NULL);
 		++i;
 	}
+	simu->stop = TRUE;
+	pthread_join(simu->monitor.checker_thread, NULL);
 }
