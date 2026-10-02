@@ -13,7 +13,8 @@ FILES = codexion.c \
 	   simulation_utils.c \
 	   simulation_actions.c \
 	   monitoring.c \
-	   simulation.c 
+	   simulation.c \
+	   simulation2.c
 
 OBJS = $(FILES:%.c=$(OBJ_DIR)/%.o)
 

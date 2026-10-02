@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/21 14:07:05 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/10/01 16:47:54 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/10/02 16:56:29 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,10 +90,11 @@ typedef struct s_coder
 	t_dongle		*dongle_2;
 	pthread_t		thread;
 	pthread_mutex_t	*log_mutex;
-	uint64_t		time_start_of_simu;
+	uint64_t		*time_start_of_simu;
 	t_bool			*simu_started;
 	t_bool			*stop;
 	pthread_mutex_t	compile_mutex;
+	int				nb_coders;
 }	t_coder;
 
 typedef struct s_monitor
@@ -115,6 +116,7 @@ typedef struct s_simulation
 	t_monitor		monitor;
 	t_bool			stop;
 	t_bool			simu_started;
+	uint64_t		time_start_of_simu;
 }	t_simulation;
 
 #endif

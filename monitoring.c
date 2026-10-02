@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 14:24:43 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/10/02 15:31:30 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/10/02 16:59:46 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,14 @@ static void	check_all_deadlines(t_monitor *monitor)
 		pthread_mutex_lock(&monitor->coders[i].compile_mutex);
 		last_compile = monitor->coders[i].last_compile;
 		pthread_mutex_unlock(&monitor->coders[i].compile_mutex);
-		if (last_compile != 0
-			&& last_compile
+		if (last_compile == 0)
+			last_compile = *monitor->coders[i].time_start_of_simu;
+		if (last_compile
 			+ monitor->coders[i].time_burnout <= true_get_time_of_day())
 		{
 			print_log("burned out\n",
-				monitor->coders[i].time_start_of_simu, &monitor->coders[i]);
-			*monitor->stop = TRUE;
+				*monitor->coders[i].time_start_of_simu,
+				&monitor->coders[i], TRUE);
 			return ;
 		}
 		++i;

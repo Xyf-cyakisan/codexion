@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/22 14:41:17 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/10/02 15:38:33 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/10/02 16:44:11 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,24 +39,22 @@ static t_bool	init_mutexes(t_simulation *simu)
 static void	*run_single_simulation(void *arg)
 {
 	t_coder		*coder;
-	uint64_t	time_start_of_simu;
 	int			required_comps_beg;
 	t_request	request;
 
 	coder = arg;
 	while (*coder->simu_started == FALSE)
 		usleep(1000);
-	time_start_of_simu = true_get_time_of_day();
-	coder->time_start_of_simu = time_start_of_simu;
 	required_comps_beg = coder->required_compilations;
 	while (coder->required_compilations != 0 && *coder->stop == FALSE)
-		coder_act(coder, time_start_of_simu, required_comps_beg, request);
+		coder_act(coder, *coder->time_start_of_simu,
+			required_comps_beg, request);
 	return (NULL);
 }
 
 static t_bool	init_threads(t_simulation *simu)
 {
-	int	i;
+	int		i;
 
 	i = 0;
 	if (pthread_create(&simu->monitor.checker_thread, NULL,
@@ -76,7 +74,7 @@ static t_bool	init_threads(t_simulation *simu)
 		}
 		++i;
 	}
-	simu->simu_started = TRUE;
+	init_simulation(simu);
 	return (TRUE);
 }
 

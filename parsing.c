@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 16:10:34 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/10/01 15:40:13 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/10/02 16:56:56 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ static void	set_values(t_simulation *simulation,
 	while (++i < nb_dongle)
 	{
 		(simulation->dongles)[i].id = i + 1;
-		(simulation->dongles)[i].last_usage = 0;
 		(simulation->dongles)[i].heap.scheduler = config.scheduler;
 		(simulation->dongles)[i].dongle_cd = config.dongle_cd;
 	}
@@ -101,6 +100,7 @@ static void	set_values(t_simulation *simulation,
 		(simulation->coders)[i].time_refactor = config.time_refactor;
 		(simulation->coders)[i].log_mutex = &simulation->log_mutex;
 		set_dongle_one_and_two(simulation, config, i);
+		(simulation->coders)[i].nb_coders = config.nb_coders;
 	}
 }
 

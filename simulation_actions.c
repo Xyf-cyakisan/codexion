@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 13:28:15 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/10/01 16:42:35 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/10/02 16:57:57 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ void	compile(t_coder *coder, uint64_t time_start_of_simu)
 	heap_pop(&coder->dongle_2->heap);
 	pthread_mutex_unlock(&coder->dongle_2->heap.heap_mutex);
 	pthread_mutex_unlock(&coder->dongle_1->heap.heap_mutex);
-	print_log("has taken a dongle\n", time_start_of_simu, coder);
-	print_log("has taken a dongle\n", time_start_of_simu, coder);
+	print_log("has taken a dongle\n", time_start_of_simu, coder, FALSE);
+	print_log("has taken a dongle\n", time_start_of_simu, coder, FALSE);
 	pthread_mutex_lock(&coder->compile_mutex);
 	coder->last_compile = true_get_time_of_day();
 	pthread_mutex_unlock(&coder->compile_mutex);
-	print_log("is compiling\n", time_start_of_simu, coder);
+	print_log("is compiling\n", time_start_of_simu, coder, FALSE);
 	usleep(coder->time_compile * 1000);
 	coder->required_compilations--;
 	update_dongle_cooldown(coder);
@@ -40,14 +40,14 @@ void	compile(t_coder *coder, uint64_t time_start_of_simu)
 
 void	debug(t_coder *coder, uint64_t time_start_of_simu)
 {
-	print_log("is debugging\n", time_start_of_simu, coder);
+	print_log("is debugging\n", time_start_of_simu, coder, FALSE);
 	usleep(1000 * coder->time_debug);
 	coder->status = get_next_step(coder->status);
 }
 
 void	refactor(t_coder *coder, uint64_t time_start_of_simu)
 {
-	print_log("is refactoring\n", time_start_of_simu, coder);
+	print_log("is refactoring\n", time_start_of_simu, coder, FALSE);
 	usleep(1000 * coder->time_refactor);
 	coder->status = get_next_step(coder->status);
 }
@@ -55,7 +55,7 @@ void	refactor(t_coder *coder, uint64_t time_start_of_simu)
 void	coder_act(t_coder *coder, uint64_t time_start_of_simu,
 			int required_comps_beg, t_request request)
 {
-	if (coder->status == COMPILING)
+	if (coder->status == COMPILING && coder->nb_coders != 1)
 	{
 		if (required_comps_beg > coder->required_compilations)
 		{
@@ -75,6 +75,6 @@ void	coder_act(t_coder *coder, uint64_t time_start_of_simu,
 	}
 	else if (coder->status == DEBUGING)
 		debug(coder, time_start_of_simu);
-	else
+	else if (coder->status == REFACTORING)
 		refactor(coder, time_start_of_simu);
 }
