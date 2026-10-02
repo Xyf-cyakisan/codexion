@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 13:53:53 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/10/01 16:42:29 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/10/02 15:26:30 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ t_status	get_next_step(t_status current_step)
 void	print_log(char *log, uint64_t time_start_of_simu, t_coder *coder)
 {
 	pthread_mutex_lock(coder->log_mutex);
+	if (*coder->stop == TRUE)
+		return ;
 	printf("%lld ", (long long int)(true_get_time_of_day()
 			- time_start_of_simu));
 	printf("%d ", coder->id);
