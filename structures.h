@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/21 14:07:05 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/10/02 16:56:29 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/10/05 17:18:42 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,9 @@
 # define ERR_NB_CODERS "Number of coders must be greater than 0"
 # define ERR_TIME_BURNOUT "Time to burnout must be greater than 0"
 # define ERR_REQUIRED_COMP "Number of compiles required must be greater than 0"
-# define ERR_BUR_S "Time to burnout needs to be greater than the operating time"
-# define ERR_EMPTY_NODE_HEAP "NULL node encountered"
 # define ERR_MUTEX_INIT "Mutexes initialization failed"
 # define ERR_THREADS_INIT "Threads initialization failed"
+# define ERR_EMPTY_NODE_HEAP "NULL node encountered"
 # define TRUE 1
 # define FALSE -1
 
@@ -94,6 +93,7 @@ typedef struct s_coder
 	t_bool			*simu_started;
 	t_bool			*stop;
 	pthread_mutex_t	compile_mutex;
+	pthread_mutex_t	nb_comp;
 	int				nb_coders;
 }	t_coder;
 

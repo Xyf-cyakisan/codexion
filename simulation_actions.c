@@ -6,13 +6,32 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 13:28:15 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/10/02 16:57:57 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/10/05 17:03:18 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-void	compile(t_coder *coder, uint64_t time_start_of_simu)
+static t_bool	compile_sleep(t_coder *coder)
+{
+	int	counter;
+
+	counter = 0;
+	while (counter < 10)
+	{
+		usleep((coder->time_compile / 10) * 1000);
+		if (*coder->stop == TRUE)
+		{
+			pthread_mutex_unlock(&coder->dongle_1->mutex);
+			pthread_mutex_unlock(&coder->dongle_2->mutex);
+			return (FALSE);
+		}
+		++counter;
+	}
+	return (TRUE);
+}
+
+static void	compile(t_coder *coder, uint64_t time_start_of_simu)
 {
 	pthread_mutex_lock(&coder->dongle_1->mutex);
 	pthread_mutex_lock(&coder->dongle_2->mutex);
@@ -30,22 +49,25 @@ void	compile(t_coder *coder, uint64_t time_start_of_simu)
 	coder->last_compile = true_get_time_of_day();
 	pthread_mutex_unlock(&coder->compile_mutex);
 	print_log("is compiling\n", time_start_of_simu, coder, FALSE);
-	usleep(coder->time_compile * 1000);
+	if (compile_sleep(coder) == FALSE)
+		return ;
+	pthread_mutex_lock(&coder->nb_comp);
 	coder->required_compilations--;
+	pthread_mutex_unlock(&coder->nb_comp);
 	update_dongle_cooldown(coder);
 	pthread_mutex_unlock(&coder->dongle_1->mutex);
 	pthread_mutex_unlock(&coder->dongle_2->mutex);
 	coder->status = get_next_step(coder->status);
 }
 
-void	debug(t_coder *coder, uint64_t time_start_of_simu)
+static void	debug(t_coder *coder, uint64_t time_start_of_simu)
 {
 	print_log("is debugging\n", time_start_of_simu, coder, FALSE);
 	usleep(1000 * coder->time_debug);
 	coder->status = get_next_step(coder->status);
 }
 
-void	refactor(t_coder *coder, uint64_t time_start_of_simu)
+static void	refactor(t_coder *coder, uint64_t time_start_of_simu)
 {
 	print_log("is refactoring\n", time_start_of_simu, coder, FALSE);
 	usleep(1000 * coder->time_refactor);

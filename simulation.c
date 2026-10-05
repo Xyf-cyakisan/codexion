@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/22 14:41:17 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/10/02 16:44:11 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/10/05 17:02:39 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,17 @@ static t_bool	init_mutexes(t_simulation *simu)
 	{
 		if (pthread_mutex_init(&simu->dongles[i].mutex, NULL) != 0
 			|| pthread_mutex_init(&simu->dongles[i].heap.heap_mutex, NULL) != 0
-			|| pthread_mutex_init(&simu->coders[i].compile_mutex, NULL))
+			|| pthread_mutex_init(&simu->coders[i].compile_mutex, NULL)
+			|| pthread_mutex_init(&simu->coders[i].nb_comp, NULL))
 		{
 			while (i-- > 0)
 			{
 				pthread_mutex_destroy(&simu->dongles[i].heap.heap_mutex);
 				pthread_mutex_destroy(&simu->dongles[i].mutex);
 				pthread_mutex_destroy(&simu->coders[i].compile_mutex);
+				pthread_mutex_destroy(&simu->coders[i].nb_comp);
 			}
-			return (display_error(ERR_MUTEX_INIT, 11, 0), FALSE);
+			return (display_error(ERR_MUTEX_INIT, 9, 0), FALSE);
 		}
 		++i;
 	}
@@ -60,7 +62,7 @@ static t_bool	init_threads(t_simulation *simu)
 	if (pthread_create(&simu->monitor.checker_thread, NULL,
 			monitor, &simu->monitor) != 0)
 		return (pthread_join(simu->monitor.checker_thread, NULL),
-			display_error(ERR_THREADS_INIT, 12, 0), FALSE);
+			display_error(ERR_THREADS_INIT, 10, 0), FALSE);
 	while (i < simu->nb_coders)
 	{
 		if (pthread_create(&simu->coders[i].thread, NULL, run_single_simulation,
@@ -69,7 +71,7 @@ static t_bool	init_threads(t_simulation *simu)
 			while (i-- > 0)
 				pthread_join(simu->coders[i].thread, NULL);
 			return (pthread_join(simu->monitor.checker_thread, NULL),
-				display_error(ERR_THREADS_INIT, 12, 0),
+				display_error(ERR_THREADS_INIT, 10, 0),
 				simu->simu_started = TRUE, simu->stop = TRUE, FALSE);
 		}
 		++i;
@@ -78,7 +80,7 @@ static t_bool	init_threads(t_simulation *simu)
 	return (TRUE);
 }
 
-void	set_heaps_beginning(t_simulation *simulation)
+static void	set_heaps_beginning(t_simulation *simulation)
 {
 	int	parity;
 	int	i;

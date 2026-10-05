@@ -6,7 +6,7 @@
 /*   By: cyakisan <cyakisan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/21 14:12:16 by cyakisan          #+#    #+#             */
-/*   Updated: 2026/10/01 16:21:15 by cyakisan         ###   ########.fr       */
+/*   Updated: 2026/10/05 17:14:54 by cyakisan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	clean_mutexes(t_simulation *simu)
 		pthread_mutex_destroy(&simu->coders[i].compile_mutex);
 		pthread_mutex_destroy(&simu->dongles[i].mutex);
 		pthread_mutex_destroy(&simu->dongles[i].heap.heap_mutex);
+		pthread_mutex_destroy(&simu->coders[i].nb_comp);
 		++i;
 	}
 }
